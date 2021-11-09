@@ -25,8 +25,11 @@ SECRET_KEY = 'ao5z(o(z@cvzodm99d32jkxa5e8a1!q_4sqss5-a%n6tg$#h$+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["kartcap.us-south.cf.appdomain.cloud", "localhost"]
-
+# ALLOWED_HOSTS = ["localhost"]
+ALLOWED_HOSTS = ["127.0.0.1",
+    "jozuk.eu-gb.mybluemix.net",
+    "localhost:8000",
+    "localhost"]
 
 # Application definition
 
@@ -119,6 +122,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+
+STATICFILES_DIR = [os.path.join(BASE_DIR, 'djangoapp/static')]
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(STATIC_ROOT, 'media')

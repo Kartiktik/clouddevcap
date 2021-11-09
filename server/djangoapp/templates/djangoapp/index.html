@@ -1,54 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    {% load static %}
     <meta charset="UTF-8">
-    <title>Projeto Avaliação da Concessionária</title>
+    <title>Dealership Reviews</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'table.css' %}"/>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <link href="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.css" rel="stylesheet">
     <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.js"></script>
-    <script src="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+    <script
+        src="https://unpkg.com/bootstrap-table@1.18.2/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
 
 </head>
 
-    <body>
-        {% include 'Navbar.html' %}
+<body class="d-flex flex-column min-vh-100">
+    <!-- Remove this line the first time you edit this file -->
+    <!-- This is the index page of your Django app! -->
     <!--Add a nav bar here -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand text-warning" href="#">Super Cars</a>
+            </div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav ml-auto">
+                    <!-- <a class="nav-item nav-link active" href="#">Home</a> -->
+                    <a class="nav-item nav-link" href="{% url 'djangoapp:about' %}">About Us</a>
+                    <a class="nav-item nav-link" href="{% url 'djangoapp:contact' %}">Contact</a>
+                    {% if user.is_authenticated %}
+                    <a class="btn btn-link text-warning disabled" href="#">{{ user.first_name }}({{ user.username
+                        }})</a>
+                    <a class="btn btn-link text-warning" href="{% url 'djangoapp:logout' %}">Logout</a>
+
+                    {% else %}
+                    <form class="form-inline" action="{% url 'djangoapp:login' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <input class="form-control" type="text" placeholder="Username" name="username">
+                            <input class="form-control" type="password" placeholder="Password" name="psw">
+                            <button class="btn btn-success" type="submit">Login</button>
+                            <a class="btn btn-link text-warning" href="{% url 'djangoapp:signup' %}">Sign Up</a>
+                        </div>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+
+    <!-- Code to debug the context variable -->
+    <!-- <textarea onclick="this.focus();this.select()" style="width: 100%;"> {% filter force_escape %} {% debug %} {% endfilter %}</textarea> -->
+
+    <!--Add a dealer table here -->
+    {% if dealerships %}
     <div class="container">
-     <table class="table table-striped" id="table" data-filter-control="true" style="margin-top: 3%; margin-bottom: 3%;">
-        <thead>
+        <table class="table table-secondary table-bordered table-hover" id="table" data-filter-control="true">
+            <thead>
                 <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Dealer Name</th>
-                    <th scope="col">City</th>
-                    <th scope="col">Address</th>
-                    <th scope="col">Zip</th>
-                    <th data-field="state" data-filter-control="select">State</th>
+                    <th scope="col"> ID </th>
+                    <th scope="col"> Dealer name </th>
+                    <th scope="col"> City </th>
+                    <th scope="col"> Address </th>
+                    <th scope="col"> Zip </th>
+                    <th scope="col" data-field="state" data-filter-control="select"II> State </th>
                 </tr>
             </thead>
-        <tbody>
-            {% for dealer in dealerships%}
+            <tbody>
+                {% for dealer in dealerships %}
                 <tr>
-                    <td style="padding: 2%;">{{dealer.id}}</td>
-                    <td style="padding: 2%;"><a href="{% url 'djangoapp:dealer_details' dealer.id %}">{{dealer.full_name}}</a></td>
-                    <td style="padding: 2%;">{{dealer.city}}</td>
-                    <td style="padding: 2%;">{{dealer.address}}</td>
-                    <td style="padding: 2%;">{{dealer.zip}}</td>
-                    <td style="padding: 2%;">{{dealer.st}}</td>
+                    <th scope="row">{{dealer.id}}</th>
+                    <td><a href="{% url 'djangoapp:dealer_details' dealer.id %}">{{dealer.full_name}}</a></td>
+                    <td> {{dealer.city}}</td>
+                    <td> {{dealer.address}}</td>
+                    <td> {{dealer.zip}}</td>
+                    <td> {{dealer.st}}</td>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <!--Add a dealer table here -->
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
+    {% endif %}
 
-    </body>
+
+    <footer class="mt-auto">
+        <!-- <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);"> -->
+        <div class="text-center p-2 navbar-dark bg-dark">
+            <em class="text-muted">© 2021 Copyright: </em>
+            <a class="fw-bold text-warning" href="{% url 'djangoapp:index' %}">SuperCars</a>
+        </div>
+    </footer>
+
+    <!-- Turns on filter control for the table element -->
     <script>
-        $(function() {
+        $(function () {
             $('#table').bootstrapTable()
         })
     </script>
+</body>
 
 </html>
