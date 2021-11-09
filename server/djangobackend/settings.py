@@ -27,7 +27,7 @@ DEBUG = True
 
 # ALLOWED_HOSTS = ["localhost"]
 ALLOWED_HOSTS = ["127.0.0.1",
-    "jozuk.eu-gb.mybluemix.net",
+    "kartcap.us-south.cf.appdomain.cloud",
     "localhost:8000",
     "localhost"]
 
